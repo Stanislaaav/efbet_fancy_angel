@@ -1,5 +1,8 @@
 package com.siliev.controllers;
 
+import com.siliev.dto.CountryBordersDto;
+import com.siliev.services.CountryBordersService;
+import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,13 +13,19 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("api/travel/angel")
 public class AngelTravelDataController {
 
+    private final CountryBordersService countryBordersService;
+
+    public AngelTravelDataController(CountryBordersService countryBordersService) {
+        this.countryBordersService = countryBordersService;
+    }
+
     @GetMapping("/data")
-    public ResponseEntity getInformationAboutTraveling(
-        @RequestParam String startCountry,
-        @RequestParam Double budgetPerCountry,
-        @RequestParam Double totalBudget
+    public ResponseEntity<List<CountryBordersDto>> getInformationAboutTraveling(
+        @RequestParam(value = "startCountry") String startCountry,
+        @RequestParam(value = "budgetPerCountry", required = false) Double budgetPerCountry,
+        @RequestParam(value = "totalBudget", required = false) Double totalBudget
     ) {
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body(countryBordersService.findAllBordersByCountry(startCountry));
     }
 
 }
