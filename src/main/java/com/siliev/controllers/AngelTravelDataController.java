@@ -1,30 +1,38 @@
 package com.siliev.controllers;
 
+import com.siliev.config.TEST;
 import com.siliev.dto.CountryBordersDto;
+import com.siliev.dto.LatestRateDto;
+import com.siliev.enums.CurrenciesOfTheWorldEnum;
+import com.siliev.repositories.CountryBordersRepository;
 import com.siliev.services.CountryBordersService;
+import com.siliev.services.LatestRateService;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import org.springframework.beans.factory.annotation.Value;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
 
 @RestController
 @RequestMapping("api/travel/angel")
 public class AngelTravelDataController {
 
-    @Value("${currency.exchange.rate.url}")
-    private String url;
-
     private final CountryBordersService countryBordersService;
-    private final RestTemplate restTemplate;
+    private final LatestRateService latestRateService;
+    private final CountryBordersRepository countryBordersRepository;
 
-    public AngelTravelDataController(CountryBordersService countryBordersService, RestTemplate restTemplate) {
+    public AngelTravelDataController(CountryBordersService countryBordersService, LatestRateService latestRateService,
+        CountryBordersRepository countryBordersRepository) {
         this.countryBordersService = countryBordersService;
-        this.restTemplate = restTemplate;
+        this.latestRateService = latestRateService;
+        this.countryBordersRepository = countryBordersRepository;
     }
 
     @GetMapping("/data")
@@ -34,11 +42,43 @@ public class AngelTravelDataController {
         @RequestParam(value = "totalBudget", required = false) Double totalBudget
     ) {
 
-        ResponseEntity<Map> response = restTemplate.getForEntity(url, Map.class);
+        List<CountryBordersDto> countryBordersDtos = countryBordersService.findAllBordersByCountry(startCountry);
 
-        Map<String,Double> currencyExchangeRate = (Map<String, Double>) response.getBody().get("rates");
+        //countryBordersDtos.stream().map(coutryBorderName -> coutryBorderName.)
 
         return ResponseEntity.ok().body(countryBordersService.findAllBordersByCountry(startCountry));
     }
 
+
+
+    @GetMapping("/dat")
+    public ResponseEntity<Void> put() {
+
+        TEST test = new TEST();
+
+//        Map<CurrenciesOfTheWorldEnum,String> map = Arrays.stream(CurrenciesOfTheWorldEnum.values())
+//            .collect(Collectors.toMap(Function.identity(), CurrenciesOfTheWorldEnum::getCode));
+
+        for (Map.Entry<String, String> entry : test.getMap().entrySet()) {
+           //System.out.println(entry.getKey() + ":" + entry.getValue());
+
+            try {
+                countryBordersRepository.insertIntoTable(entry.getValue(), entry.getKey());
+            } catch (Exception e) {
+                continue;
+            }
+
+        }
+
+        //countryBordersRepository.insertIntoTable()
+
+        return ResponseEntity.ok().build();
+    }
+
+
+    @PostMapping("/getCurrencyRate")
+    public ResponseEntity<LatestRateDto> getCurrencyRate(@RequestBody LatestRateDto latestRateDto) {
+
+        return ResponseEntity.ok().body(latestRateService.save(latestRateService.getCurrencyExchangeRate()));
+    }
 }
