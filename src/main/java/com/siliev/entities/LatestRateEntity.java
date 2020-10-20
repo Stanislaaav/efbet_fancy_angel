@@ -15,6 +15,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.MapKeyColumn;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.BatchSize;
@@ -22,6 +23,7 @@ import org.hibernate.annotations.BatchSize;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Entity(name = "latest_rates")
 @Table(name = "latest_rates")
 public class LatestRateEntity {

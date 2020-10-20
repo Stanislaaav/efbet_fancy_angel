@@ -2,6 +2,7 @@ package com.siliev.services.impl;
 
 import com.siliev.dto.LatestRateDto;
 import com.siliev.entities.LatestRateEntity;
+import com.siliev.properties.LatestRateProperties;
 import com.siliev.repositories.LatestRateRepository;
 import com.siliev.services.LatestRateService;
 import org.modelmapper.ModelMapper;
@@ -13,14 +14,15 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class LatestRateServiceImpl implements LatestRateService {
 
-    @Value("${currency.exchange.rate.url}")
-    private String url;
+    private final LatestRateProperties latestRateProperties;
 
     private final ModelMapper modelMapper;
     private final LatestRateRepository latestRateRepository;
     private final RestTemplate restTemplate;
 
-    public LatestRateServiceImpl(ModelMapper modelMapper, LatestRateRepository latestRateRepository, RestTemplate restTemplate) {
+    public LatestRateServiceImpl(LatestRateProperties latestRateProperties, ModelMapper modelMapper,
+        LatestRateRepository latestRateRepository, RestTemplate restTemplate) {
+        this.latestRateProperties = latestRateProperties;
         this.modelMapper = modelMapper;
         this.latestRateRepository = latestRateRepository;
         this.restTemplate = restTemplate;
@@ -28,8 +30,13 @@ public class LatestRateServiceImpl implements LatestRateService {
 
     @Override
     public LatestRateDto getCurrencyExchangeRate() {
-        ResponseEntity<LatestRateDto> latestRate = restTemplate.getForEntity(url, LatestRateDto.class);
+        ResponseEntity<LatestRateDto> latestRate = restTemplate.getForEntity(latestRateProperties.getUrl(), LatestRateDto.class);
         return latestRate.getBody();
+    }
+
+    @Override
+    public LatestRateDto findLatest() {
+        return modelMapper.map(latestRateRepository.findLatest(), LatestRateDto.class);
     }
 
     @Override

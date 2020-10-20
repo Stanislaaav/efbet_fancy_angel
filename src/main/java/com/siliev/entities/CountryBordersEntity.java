@@ -6,12 +6,14 @@ import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Entity
 @Table(name = "country_borders", schema = "public", catalog = "efbet")
 @IdClass(CompositeKey.class)
@@ -30,5 +32,8 @@ public class CountryBordersEntity {
 
     @Column(name = "country_border_name")
     private String countryBorderName;
+
+    @Column(name = "country_currency_code")
+    private String countyCurrencyIsoCode;
 
 }
