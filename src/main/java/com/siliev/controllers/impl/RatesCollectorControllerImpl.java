@@ -28,4 +28,9 @@ public class RatesCollectorControllerImpl implements RatesCollectorController {
             countryBordersService.findAllBordersByCountry(travelData.getStartCountry()),
             latestRateService.findLatest()));
     }
+
+    public String restricted() {
+        return "To see this text you need to be logged in!";
+    }
+
 }
