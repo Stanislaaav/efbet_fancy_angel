@@ -6,7 +6,7 @@ import static org.mockito.Mockito.when;
 
 import com.siliev.dto.LatestRateDto;
 import com.siliev.entities.LatestRateEntity;
-import com.siliev.properties.LatestRateProperties;
+import com.siliev.properties.LatestRateProperty;
 import com.siliev.repositories.LatestRateRepository;
 import com.siliev.services.impl.LatestRateServiceImpl;
 import java.math.BigDecimal;
@@ -33,7 +33,7 @@ class LatestRateServiceTest {
     @Mock
     private RestTemplate restTemplate;
     @Mock
-    private LatestRateProperties latestRateProperties;
+    private LatestRateProperty latestRateProperty;
     @InjectMocks
     private LatestRateServiceImpl latestRateService;
 
@@ -113,7 +113,7 @@ class LatestRateServiceTest {
             .base(url)
             .build();
 
-        when(latestRateProperties.getUrl()).thenReturn(url);
+        when(latestRateProperty.getUrl()).thenReturn(url);
         when(restTemplate.getForEntity(url, LatestRateDto.class)).thenReturn(new ResponseEntity(response, HttpStatus.OK));
         LatestRateDto result = latestRateService.getCurrencyExchangeRate();
 

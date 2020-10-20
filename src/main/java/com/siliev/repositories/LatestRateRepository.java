@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface LatestRateRepository extends JpaRepository<LatestRateEntity,Long> {
+public interface LatestRateRepository extends JpaRepository<LatestRateEntity, Long> {
 
     @Query(value = ""
         + "SELECT pk_latest_rate, base, date, success, \"timestamp\" "

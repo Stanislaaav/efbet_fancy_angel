@@ -16,8 +16,6 @@ public class DataProcesing {
         List<CountryBordersDto> countryBordersDtos,
         LatestRateDto latestRateDto) {
 
-
-
         Double sumOfAllCountry = travelData.getBudgetPerCountry() * countryBordersDtos.size();
         Integer exactTimesTravelAroundCountry = (int) ((travelData.getTotalBudget() / (sumOfAllCountry)));
 
